@@ -1,93 +1,87 @@
-Core Components of Linux
- Kernel
+# Linux Architecture Notes
 
-The core of the Linux operating system
+## 1. Core Components of Linux
 
-Acts as a bridge between hardware and software
+### Kernel
+- The kernel is the **core of the Linux OS**.
+- It manages:
+  - CPU scheduling
+  - Memory management
+  - Hardware communication
+  - Device drivers
+  - Process management
+- Acts as a bridge between hardware and software.
 
-Responsible for:
+### User Space
+- Where user applications run.
+- Examples:
+  - Shell (bash)
+  - Text editors
+  - Web servers
+  - Package managers
+- Users interact with Linux through user space tools which send requests to the kernel.
 
-Process management
 
-Memory management
+### Init / systemd
+- First process started by Linux during boot.
+- Process ID (PID) = 1
+- Responsible for:
+  - Starting system services
+  - Managing background services (daemons)
+  - Handling system startup and shutdown
 
-Device drivers
+Modern Linux distributions use **systemd** instead of older init systems.
 
-File system handling
 
-Networking
+## 2. How Processes Are Created and Managed
 
-👉 Without the kernel, applications cannot talk to hardware.
+### Process Creation
+- Every running program in Linux is a **process**.
+- A new process is created using:
+  - `fork()` → creates a copy of a process
+  - `exec()` → replaces process with a new program
 
-🔹 User Space
+Each process has:
+- PID (Process ID)
+- Parent Process ID (PPID)
+- Priority and resource allocation
 
-Area where user applications run
 
-Includes:
+### Process States
 
-Shell (bash, zsh)
+| State | Meaning |
+|--------|------------|
+| Running | Process is actively using CPU |
+| Sleeping | Waiting for input or resource |
+| Stopped | Process paused manually |
+| Zombie | Process finished but parent hasn’t read exit status |
 
-System utilities (ls, cp, ps)
+Zombie processes consume minimal resources but indicate poor process cleanup.
 
-Applications (Docker, Nginx, etc.)
+---
 
-👉 User space communicates with kernel using system calls.
+## 3. What systemd Does and Why It Matters
 
-🔹 Init / systemd
+### What systemd Does
+- Starts services during boot
+- Restarts failed services automatically
+- Manages service dependencies
+- Provides logging through journal
+- Controls system services using units
 
-First process started when Linux boots
+---
 
-Has Process ID (PID) = 1
+### Why systemd Matters for DevOps
+- Helps monitor service health
+- Makes troubleshooting easier
+- Enables automatic service recovery
+- Provides centralized logging
 
-Responsible for starting and managing system services
-
-Most modern Linux systems use systemd instead of older init systems.
-
-2. How Processes Are Created & Managed
-Process Creation
-
-Processes are created using:
-
-fork() → Creates a copy of an existing process
-
-exec() → Replaces process with a new program
-
-Example:
-
-When you run a command in terminal:
-
-Shell creates a new process
-
-Kernel assigns a PID
-
-Process States
-State	Meaning
-Running	Process is actively using CPU
-Sleeping	Waiting for input or resource
-Stopped	Paused process
-Zombie	Process finished but parent hasn't cleaned it
-Orphan	Parent process terminated before child
-
-👉 Zombie processes can waste system resources.
-
-3. What systemd Does & Why It Matters
-What systemd Does
-
-Starts system services during boot
-
-Manages background services (daemons)
-
-Handles service restart policies
-
-Manages logging via journal
-
-Tracks service dependencies
-
-Why systemd Matters in DevOps
-
-Helps monitor services
-
-Automatically restarts failed applications
-
-Simplifies troubleshooting
+---
+## Commands
+ps aux
+top
+systemctl status
+journalctl
+kill
 
